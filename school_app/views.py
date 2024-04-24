@@ -277,3 +277,33 @@ class StudentWithBatch(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
     
     
+class SchoolWithBatch(APIView):
+    def get(self ,request,school_id):
+        try:
+            schools = School.objects.get(id=school_id)
+        except School.DoesNotExist:
+            return Response({'error': 'school not found '}, status=status.HTTP_404_NOT_FOUND)
+        
+        school_serializer = SchoolSerializer(schools)
+        batch = Batch.objects.filter(school=schools)
+        
+        final_data=[]
+        
+        for batch in batch:
+            batch_serializer = BatchSerializer(batch)
+            student = Student.objects.filter(batch=batch)
+            student_serializer = StudentSerializer(student, many=True)
+            
+            batch_data = batch_serializer.data
+            batch_data['variants'] = student_serializer.data
+            
+            final_data.append(batch_data)
+
+
+        response_data ={
+            'school': school_serializer.data,
+            'batch' : final_data
+            
+        }
+
+        return Response(response_data,status=status.HTTP_200_OK)

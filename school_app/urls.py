@@ -21,4 +21,5 @@ urlpatterns = [
    path('student/<int:student_id>/edit1/', StudentEdit1.as_view(), name='student-edit1'),
    path('student/<int:student_id>/edit2/', StudentEdit2.as_view(), name='student-edit2'),
    path('student/<int:student_id>/batch/',StudentWithBatch.as_view(),name='Student-With-Batch'),
+   path('school/<int:school_id>/batch/',SchoolWithBatch.as_view(), name='School-With-Batch')
 ]
